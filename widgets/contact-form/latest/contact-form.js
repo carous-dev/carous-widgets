@@ -379,7 +379,18 @@
         .cfw-widget.is-compact { display: block; }
       }
       @media (max-width: 520px) {
-        .cfw-modal-overlay { padding: 12px; }
+        .cfw-modal-overlay {
+          align-items: stretch;
+          padding: 0;
+        }
+        .cfw-modal {
+          width: 100%;
+          max-width: none;
+          max-height: 100dvh;
+          border-left: 0;
+          border-right: 0;
+          border-radius: 0;
+        }
         .cfw-modal-header,
         .cfw-modal-content { padding: 18px; }
       }

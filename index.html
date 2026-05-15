@@ -1,0 +1,481 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Carous Widget Directory</title>
+    <style>
+      :root {
+        --bg: #f6f7f9;
+        --panel: #ffffff;
+        --ink: #101827;
+        --muted: #647084;
+        --line: #d9dee7;
+        --line-strong: #b8c0ce;
+        --brand: #0f766e;
+        --brand-soft: #ccfbf1;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.5;
+      }
+      a { color: inherit; }
+      .shell {
+        width: min(1180px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 28px 0 48px;
+      }
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 14px 0 22px;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-width: 0;
+      }
+      .brand-mark {
+        width: 38px;
+        height: 38px;
+        border-radius: 8px;
+        background: var(--brand);
+        color: #fff;
+        display: grid;
+        place-items: center;
+        font-weight: 800;
+        letter-spacing: 0.03em;
+      }
+      .brand h1 {
+        margin: 0;
+        font-size: clamp(1.35rem, 3vw, 2rem);
+        line-height: 1.1;
+      }
+      .brand p {
+        margin: 3px 0 0;
+        color: var(--muted);
+        font-size: 0.92rem;
+      }
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        min-height: 32px;
+        padding: 0 12px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: var(--panel);
+        color: var(--muted);
+        font-size: 0.84rem;
+        white-space: nowrap;
+      }
+      .hero {
+        display: grid;
+        gap: 18px;
+        padding: 24px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+      }
+      .hero h2 {
+        margin: 0;
+        font-size: clamp(1.5rem, 4vw, 2.35rem);
+        line-height: 1.08;
+        max-width: 14ch;
+      }
+      .hero p {
+        margin: 0;
+        color: var(--muted);
+        max-width: 70ch;
+      }
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 40px;
+        padding: 0 14px;
+        border-radius: 8px;
+        border: 1px solid var(--line-strong);
+        background: var(--panel);
+        color: var(--ink);
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 0.92rem;
+      }
+      .button.primary {
+        border-color: var(--brand);
+        background: var(--brand);
+        color: #fff;
+      }
+      .meta-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+        margin: 18px 0 0;
+      }
+      .meta {
+        padding: 14px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+      }
+      .meta span {
+        display: block;
+        color: var(--muted);
+        font-size: 0.78rem;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .meta strong {
+        display: block;
+        margin-top: 4px;
+        font-size: 1.05rem;
+      }
+      .section-head {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 16px;
+        margin: 28px 0 12px;
+      }
+      .section-head h2 {
+        margin: 0;
+        font-size: 1.15rem;
+      }
+      .section-head p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+      .widget {
+        display: grid;
+        gap: 16px;
+        padding: 18px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+      }
+      .widget-main {
+        display: flex;
+        gap: 14px;
+        min-width: 0;
+      }
+      .widget-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 8px;
+        background: var(--soft);
+        color: var(--accent);
+        display: grid;
+        place-items: center;
+        flex: none;
+        font-weight: 900;
+      }
+      .widget-kicker {
+        color: var(--accent);
+        font-size: 0.72rem;
+        font-weight: 900;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+      .widget h2 {
+        margin: 2px 0 4px;
+        font-size: 1.15rem;
+        line-height: 1.2;
+      }
+      .widget p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.92rem;
+      }
+      .widget-stats {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8px;
+        margin: 0;
+      }
+      .widget-stats div {
+        padding: 10px;
+        border-radius: 8px;
+        background: #f8fafc;
+        border: 1px solid var(--line);
+      }
+      .widget-stats dt {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.7rem;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .widget-stats dd {
+        margin: 3px 0 0;
+        font-weight: 800;
+      }
+      .links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .links a {
+        display: inline-flex;
+        align-items: center;
+        min-height: 34px;
+        padding: 0 10px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fff;
+        text-decoration: none;
+        color: var(--ink);
+        font-size: 0.86rem;
+        font-weight: 700;
+      }
+      .links a:hover,
+      .button:hover {
+        border-color: var(--accent, var(--brand));
+      }
+      .snippet {
+        border-top: 1px solid var(--line);
+        padding-top: 12px;
+      }
+      .snippet summary {
+        cursor: pointer;
+        color: var(--muted);
+        font-weight: 800;
+        font-size: 0.85rem;
+      }
+      pre {
+        margin: 10px 0 0;
+        overflow: auto;
+        padding: 12px;
+        border-radius: 8px;
+        background: #0f172a;
+        color: #e5e7eb;
+        font-size: 0.82rem;
+      }
+      code { font-family: "Cascadia Code", "SFMono-Regular", Consolas, monospace; }
+      .footer {
+        margin-top: 28px;
+        padding-top: 18px;
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 0.88rem;
+      }
+      @media (min-width: 760px) {
+        .hero {
+          grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+          align-items: center;
+        }
+        .meta-grid {
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+        .grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+      @media (max-width: 620px) {
+        .topbar,
+        .section-head {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+        .badge {
+          white-space: normal;
+        }
+        .widget-stats {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="shell">
+      <div class="topbar">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true">CW</div>
+          <div>
+            <h1>Carous Widget Directory</h1>
+            <p>Local static origin for independently shipped browser widgets.</p>
+          </div>
+        </div>
+        <span class="badge">Generated 15 May 2026, 03:22</span>
+      </div>
+
+      <section class="hero" aria-labelledby="directory-title">
+        <div>
+          <h2 id="directory-title">Built widgets, ready to test.</h2>
+        </div>
+        <div>
+          <p>Use this page as the front door for local widget QA before production deploys. Each widget has latest and versioned bundles, generated integration documentation, and a copyable script-tag starting point.</p>
+          <div class="hero-actions">
+            <a class="button primary" href="/widgets/">Open widgets folder</a>
+            <a class="button" href="http://widgets.carous.test">Refresh local origin</a>
+          </div>
+        </div>
+      </section>
+
+      <div class="meta-grid" aria-label="Directory summary">
+        <div class="meta"><span>Root</span><strong>F:\projects\carous-widgets</strong></div>
+        <div class="meta"><span>Origin</span><strong>widgets.carous.test</strong></div>
+        <div class="meta"><span>Widgets</span><strong>5</strong></div>
+        <div class="meta"><span>Command</span><strong>pnpm widgets:publish</strong></div>
+      </div>
+
+      <div class="section-head">
+        <div>
+          <h2>Published Widgets</h2>
+          <p>Latest points at the newest local build. Versioned URLs are for stable rollout checks.</p>
+        </div>
+      </div>
+
+      <section class="grid" aria-label="Published widget list">
+        <article class="widget" style="--accent:#16a34a;--soft:#dcfce7">
+      <div class="widget-main">
+        <div class="widget-icon" aria-hidden="true">WE</div>
+        <div class="widget-copy">
+          <div class="widget-kicker">whatsapp</div>
+          <h2>WhatsApp Enquiry</h2>
+          <p>Floating WhatsApp lead capture with vehicle-aware subjects, working-hours copy, and optional lead submission.</p>
+        </div>
+      </div>
+      <dl class="widget-stats">
+        <div><dt>Version</dt><dd>v0</dd></div>
+        <div><dt>Bundle</dt><dd>216.7 KB</dd></div>
+        <div><dt>Status</dt><dd>Published</dd></div>
+      </dl>
+      <div class="links" aria-label="WhatsApp Enquiry links">
+        <a href="/widgets/whatsapp-enquiry/latest/whatsapp-enquiry.js">Latest JS</a>
+        <a href="/widgets/whatsapp-enquiry/latest/README.md">Latest README</a>
+        <a href="/widgets/whatsapp-enquiry/v0/whatsapp-enquiry.js">v0 JS</a>
+        <a href="/widgets/whatsapp-enquiry/v0/README.md">v0 README</a>
+      </div>
+      <details class="snippet">
+        <summary>Integration snippet</summary>
+        <pre><code>&lt;script src="/widgets/whatsapp-enquiry/latest/whatsapp-enquiry.js" data-dealer-name="Dealer Name" data-whatsapp-number="447700900123" defer&gt;&lt;/script&gt;</code></pre>
+      </details>
+    </article>
+        <article class="widget" style="--accent:#2563eb;--soft:#dbeafe">
+      <div class="widget-main">
+        <div class="widget-icon" aria-hidden="true">VE</div>
+        <div class="widget-copy">
+          <div class="widget-kicker">vehicle</div>
+          <h2>Vehicle Enquiry</h2>
+          <p>Browser-safe enquiry modal for vehicle detail pages, with contact actions, lead payloads, and runtime opening API.</p>
+        </div>
+      </div>
+      <dl class="widget-stats">
+        <div><dt>Version</dt><dd>v0</dd></div>
+        <div><dt>Bundle</dt><dd>225.0 KB</dd></div>
+        <div><dt>Status</dt><dd>Published</dd></div>
+      </dl>
+      <div class="links" aria-label="Vehicle Enquiry links">
+        <a href="/widgets/vehicle-enquiry/latest/vehicle-enquiry.js">Latest JS</a>
+        <a href="/widgets/vehicle-enquiry/latest/README.md">Latest README</a>
+        <a href="/widgets/vehicle-enquiry/v0/vehicle-enquiry.js">v0 JS</a>
+        <a href="/widgets/vehicle-enquiry/v0/README.md">v0 README</a>
+      </div>
+      <details class="snippet">
+        <summary>Integration snippet</summary>
+        <pre><code>&lt;script src="/widgets/vehicle-enquiry/latest/vehicle-enquiry.js" data-dealer-name="Dealer Name" data-lead-endpoint="/leads" defer&gt;&lt;/script&gt;</code></pre>
+      </details>
+    </article>
+        <article class="widget" style="--accent:#7c3aed;--soft:#ede9fe">
+      <div class="widget-main">
+        <div class="widget-icon" aria-hidden="true">VV</div>
+        <div class="widget-copy">
+          <div class="widget-kicker">vehicle-views</div>
+          <h2>Vehicle Views</h2>
+          <p>Lightweight vehicle view tracker for advert analytics with duplicate-view cooldown support.</p>
+        </div>
+      </div>
+      <dl class="widget-stats">
+        <div><dt>Version</dt><dd>v0</dd></div>
+        <div><dt>Bundle</dt><dd>194.2 KB</dd></div>
+        <div><dt>Status</dt><dd>Published</dd></div>
+      </dl>
+      <div class="links" aria-label="Vehicle Views links">
+        <a href="/widgets/vehicle-views/latest/vehicle-views.js">Latest JS</a>
+        <a href="/widgets/vehicle-views/latest/README.md">Latest README</a>
+        <a href="/widgets/vehicle-views/v0/vehicle-views.js">v0 JS</a>
+        <a href="/widgets/vehicle-views/v0/README.md">v0 README</a>
+      </div>
+      <details class="snippet">
+        <summary>Integration snippet</summary>
+        <pre><code>&lt;script src="/widgets/vehicle-views/latest/vehicle-views.js" data-advert-id="12345" data-vehicle-title="Vehicle title" defer&gt;&lt;/script&gt;</code></pre>
+      </details>
+    </article>
+        <article class="widget" style="--accent:#ea580c;--soft:#ffedd5">
+      <div class="widget-main">
+        <div class="widget-icon" aria-hidden="true">VG</div>
+        <div class="widget-copy">
+          <div class="widget-kicker">vehicle-gallery</div>
+          <h2>Vehicle Gallery</h2>
+          <p>Responsive vehicle media gallery with images, video support, loading state, and runtime updates.</p>
+        </div>
+      </div>
+      <dl class="widget-stats">
+        <div><dt>Version</dt><dd>v0</dd></div>
+        <div><dt>Bundle</dt><dd>219.9 KB</dd></div>
+        <div><dt>Status</dt><dd>Published</dd></div>
+      </dl>
+      <div class="links" aria-label="Vehicle Gallery links">
+        <a href="/widgets/vehicle-gallery/latest/vehicle-gallery.js">Latest JS</a>
+        <a href="/widgets/vehicle-gallery/latest/README.md">Latest README</a>
+        <a href="/widgets/vehicle-gallery/v0/vehicle-gallery.js">v0 JS</a>
+        <a href="/widgets/vehicle-gallery/v0/README.md">v0 README</a>
+      </div>
+      <details class="snippet">
+        <summary>Integration snippet</summary>
+        <pre><code>&lt;div id="vehicle-gallery"&gt;&lt;/div&gt;
+&lt;script src="/widgets/vehicle-gallery/latest/vehicle-gallery.js" data-target="#vehicle-gallery" data-images='["/car-1.jpg","/car-2.jpg"]' defer&gt;&lt;/script&gt;</code></pre>
+      </details>
+    </article>
+        <article class="widget" style="--accent:#ca8a04;--soft:#fef3c7">
+      <div class="widget-main">
+        <div class="widget-icon" aria-hidden="true">SY</div>
+        <div class="widget-copy">
+          <div class="widget-kicker">sell-your-car</div>
+          <h2>Sell Your Car</h2>
+          <p>Standalone valuation journey with registration lookup, matched vehicle restore, valuation choice, and lead capture.</p>
+        </div>
+      </div>
+      <dl class="widget-stats">
+        <div><dt>Version</dt><dd>v0</dd></div>
+        <div><dt>Bundle</dt><dd>248.6 KB</dd></div>
+        <div><dt>Status</dt><dd>Published</dd></div>
+      </dl>
+      <div class="links" aria-label="Sell Your Car links">
+        <a href="/widgets/sell-your-car/latest/sell-your-car.js">Latest JS</a>
+        <a href="/widgets/sell-your-car/latest/README.md">Latest README</a>
+        <a href="/widgets/sell-your-car/v0/sell-your-car.js">v0 JS</a>
+        <a href="/widgets/sell-your-car/v0/README.md">v0 README</a>
+      </div>
+      <details class="snippet">
+        <summary>Integration snippet</summary>
+        <pre><code>&lt;div id="sell-your-car-widget"&gt;&lt;/div&gt;
+&lt;script src="/widgets/sell-your-car/latest/sell-your-car.js" data-target="#sell-your-car-widget" data-dealer-name="Dealer Name" data-lead-endpoint="/leads" data-lookup-endpoint="/api/lookup" defer&gt;&lt;/script&gt;</code></pre>
+      </details>
+    </article>
+      </section>
+
+      <p class="footer">Production note: prefer versioned widget URLs for stable releases and reserve latest for local testing or controlled preview environments.</p>
+    </main>
+  </body>
+</html>

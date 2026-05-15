@@ -39,6 +39,9 @@ http://widgets.carous.test/widgets/contact-form/latest/contact-form.js
 - `data-lead-type`, `data-lead-source`: Optional lead metadata overrides.
 - `data-phone-number`, `data-phone-tel`, `data-email`: Optional contact details displayed in the side panel.
 - `data-title`, `data-subtitle`: Optional inline widget copy overrides.
+- `data-min-submit-ms`: Minimum render-to-submit time before a submission is accepted. Defaults to `350`.
+- `data-rate-limit-window-ms`: Browser-side rate limit window. Defaults to `60000`.
+- `data-rate-limit-max`: Maximum submissions in the rate limit window. Defaults to `5`.
 
 ## Modal API
 
@@ -62,6 +65,15 @@ The widget posts directly to the configured leads endpoint with:
 - `leadOwner`
 - name, phone, email, topic, preferred contact, message, page URL
 - honeypot and `formTs` metadata
+
+## Automation Protection
+
+The widget includes client-side bot friction before posting to the leads endpoint:
+
+- two hidden honeypot fields (`website`, `companyWebsite`)
+- minimum render-to-submit timing
+- browser-side repeat submission limiting
+- silent success response for obvious automation so bots do not learn which signal fired
 
 ## Production Notes
 

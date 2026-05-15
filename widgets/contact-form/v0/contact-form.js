@@ -12,7 +12,10 @@
     phoneTel: "",
     email: "",
     title: "Tell us what you need.",
-    subtitle: "Send the team a message and they will come back to you by your preferred route."
+    subtitle: "Send the team a message and they will come back to you by your preferred route.",
+    minSubmitMs: 350,
+    rateLimitWindowMs: 60000,
+    rateLimitMax: 5
   };
 
   var TOPICS = [
@@ -43,7 +46,10 @@
       phoneTel: script.dataset.phoneTel || "",
       email: script.dataset.email || "",
       title: script.dataset.title || "",
-      subtitle: script.dataset.subtitle || ""
+      subtitle: script.dataset.subtitle || "",
+      minSubmitMs: script.dataset.minSubmitMs || "",
+      rateLimitWindowMs: script.dataset.rateLimitWindowMs || "",
+      rateLimitMax: script.dataset.rateLimitMax || ""
     };
   }
 
@@ -60,7 +66,15 @@
     if (!next.phoneTel && next.phoneNumber) {
       next.phoneTel = next.phoneNumber.replace(/[^\d+]/g, "");
     }
+    next.minSubmitMs = parsePositiveInt(next.minSubmitMs, DEFAULT_OPTIONS.minSubmitMs);
+    next.rateLimitWindowMs = parsePositiveInt(next.rateLimitWindowMs, DEFAULT_OPTIONS.rateLimitWindowMs);
+    next.rateLimitMax = parsePositiveInt(next.rateLimitMax, DEFAULT_OPTIONS.rateLimitMax);
     return next;
+  }
+
+  function parsePositiveInt(value, fallback) {
+    var parsed = parseInt(value, 10);
+    return Number.isFinite(parsed) && parsed >= 0 ? parsed : fallback;
   }
 
   function resolveTarget(target) {
@@ -416,6 +430,7 @@
         </div>
         <form class="cfw-form" novalidate>
           <input class="cfw-honeypot" type="text" name="website" tabindex="-1" autocomplete="new-password" aria-hidden="true" />
+          <input class="cfw-honeypot" type="text" name="companyWebsite" tabindex="-1" autocomplete="off" aria-hidden="true" />
           <div class="cfw-topline">Message ${escapeHtml(options.dealerName)}</div>
           <div class="cfw-grid">
             ${field(id, "name", "Full name", "text", "Your name", "name")}
@@ -491,8 +506,46 @@
       topic: String(data.get("topic") || "general"),
       preferredContact: String(data.get("preferredContact") || "phone"),
       message: String(data.get("message") || "").trim(),
-      website: String(data.get("website") || "")
+      website: String(data.get("website") || ""),
+      companyWebsite: String(data.get("companyWebsite") || "")
     };
+  }
+
+  function storageKey(options) {
+    return "carous-contact-form:" + (options.leadOwner || options.dealerName || "dealer") + ":" + options.leadEndpoint;
+  }
+
+  function isRateLimited(options) {
+    if (!options.rateLimitWindowMs || !options.rateLimitMax) return false;
+    var key = storageKey(options);
+    var now = Date.now();
+    try {
+      if (!window.localStorage) return false;
+      var stored = window.localStorage.getItem(key);
+      var parsed = stored ? JSON.parse(stored) : { count: 0, resetAt: now + options.rateLimitWindowMs };
+      if (!parsed.resetAt || now > parsed.resetAt) {
+        window.localStorage.setItem(key, JSON.stringify({ count: 1, resetAt: now + options.rateLimitWindowMs }));
+        return false;
+      }
+      if (parsed.count >= options.rateLimitMax) return true;
+      window.localStorage.setItem(key, JSON.stringify({ count: parsed.count + 1, resetAt: parsed.resetAt }));
+      return false;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  function isAutomation(values, options, formTs) {
+    if (values.website || values.companyWebsite) return true;
+    if (options.minSubmitMs > 0 && Date.now() - formTs < options.minSubmitMs) return true;
+    return isRateLimited(options);
+  }
+
+  function absorbAutomation(form, options) {
+    setStatus(form, "success", "Thank you. Your message has been sent to " + options.dealerName + ".");
+    form.reset();
+    var textarea = form.querySelector("textarea");
+    if (textarea) resizeTextarea(textarea);
   }
 
   function validate(form, values) {
@@ -520,8 +573,18 @@
 
   function submitForm(form, options, formTs) {
     var values = valuesFrom(form);
+    if (values.website || values.companyWebsite) {
+      absorbAutomation(form, options);
+      return;
+    }
+
     var errors = validate(form, values);
     if (Object.keys(errors).length) return;
+
+    if (isAutomation(values, options, formTs)) {
+      absorbAutomation(form, options);
+      return;
+    }
 
     var button = form.querySelector(".cfw-submit");
     if (button) {
@@ -554,7 +617,8 @@
       leadSource: options.leadSource,
       leadOwner: options.leadOwner,
       formTs: formTs,
-      website: values.website
+      website: values.website,
+      companyWebsite: values.companyWebsite
     };
 
     fetch(options.leadEndpoint, {

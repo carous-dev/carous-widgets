@@ -306,10 +306,12 @@ Error generating stack: `+a.message+`
     border-color: rgba(var(--vg-accent-rgb), 0.96);
 }
 
-.vehicle-gallery-counter {
+.vehicle-gallery-card .vehicle-gallery-counter {
     position: absolute;
     left: 14px;
     top: 14px;
+    right: auto;
+    bottom: auto;
     margin: 0;
     display: inline-flex;
     align-items: baseline;
@@ -330,14 +332,16 @@ Error generating stack: `+a.message+`
     box-shadow: 0 1px 3px rgba(var(--vg-rgb-10-12-16), 0.35);
     z-index: 2;
     pointer-events: none;
+    width: auto;
+    height: auto;
 }
 
-.vehicle-gallery-counter .vehicle-gallery-current {
+.vehicle-gallery-card .vehicle-gallery-counter .vehicle-gallery-current {
     font-weight: 700;
     color: var(--vg-white);
 }
 
-.vehicle-gallery-counter .vehicle-gallery-total {
+.vehicle-gallery-card .vehicle-gallery-counter .vehicle-gallery-total {
     color: rgba(var(--vg-rgb-255-255-255), 0.65);
     font-weight: 500;
 }

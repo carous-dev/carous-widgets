@@ -1,4 +1,4 @@
-"use strict";var CarousContactFormEmbed=(()=>{(function(){"use strict";var u={target:"",dealerName:"Dealer",leadEndpoint:"/leads",leadOwner:"",leadType:"contact-us",leadSource:"contact-page",phoneNumber:"",phoneTel:"",email:"",title:"Tell us what you need.",subtitle:"Send the team a message and they will come back to you by your preferred route.",minSubmitMs:350,rateLimitWindowMs:6e4,rateLimitMax:5},$=[["general","General enquiry"],["appointment","Book a visit"],["vehicle","Vehicle question"],["sell","Sell my car"]],M=[["phone","Phone"],["email","Email"]],f=null,l=null;function j(e){return e?{target:e.dataset.target||"",dealerName:e.dataset.dealerName||e.dataset.brandName||"",leadEndpoint:e.dataset.leadEndpoint||e.dataset.leadSubmitUrl||"",leadOwner:e.dataset.leadOwner||e.dataset.dealerClientId||"",leadType:e.dataset.leadType||"",leadSource:e.dataset.leadSource||"",phoneNumber:e.dataset.phoneNumber||e.dataset.phoneDisplay||"",phoneTel:e.dataset.phoneTel||"",email:e.dataset.email||"",title:e.dataset.title||"",subtitle:e.dataset.subtitle||"",minSubmitMs:e.dataset.minSubmitMs||"",rateLimitWindowMs:e.dataset.rateLimitWindowMs||"",rateLimitMax:e.dataset.rateLimitMax||""}:{}}function g(e){var t={};return Object.keys(u).forEach(function(a){t[a]=u[a]}),Object.keys(e||{}).forEach(function(a){e[a]!==void 0&&e[a]!==null&&e[a]!==""&&(t[a]=e[a])}),!t.phoneTel&&t.phoneNumber&&(t.phoneTel=t.phoneNumber.replace(/[^\d+]/g,"")),t.minSubmitMs=v(t.minSubmitMs,u.minSubmitMs),t.rateLimitWindowMs=v(t.rateLimitWindowMs,u.rateLimitWindowMs),t.rateLimitMax=v(t.rateLimitMax,u.rateLimitMax),t}function v(e,t){var a=parseInt(e,10);return Number.isFinite(a)&&a>=0?a:t}function P(e){return e?typeof e=="string"?document.querySelector(e):e&&e.nodeType===1?e:null:null}function W(e,t){return e.map(function(a){return'<option value="'+m(a[0])+'"'+(a[0]===t?" selected":"")+">"+o(a[1])+"</option>"}).join("")}function o(e){return String(e||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;")}function m(e){return o(e).replace(/`/g,"&#096;")}function L(){return`
+"use strict";var CarousContactFormEmbed=(()=>{var N="carous:lead-errors";var z="CarousLeadsDebug";function $(){if(typeof window=="undefined")return[];try{let o=window.localStorage.getItem(N);if(!o)return[];let s=JSON.parse(o);return Array.isArray(s)?s:[]}catch{return[]}}function X(o){if(typeof window!="undefined")try{let s=o.length>50?o.slice(-50):o;window.localStorage.setItem(N,JSON.stringify(s))}catch{}}function V(){if(typeof window=="undefined")return;let o=window;o[z]||(o[z]={get:()=>$(),clear:()=>{try{window.localStorage.removeItem(N)}catch{}},download:()=>{let s=$(),u=new Date().toISOString().replace(/[:.]/g,"-"),f=new Blob([JSON.stringify(s,null,2)],{type:"application/json"}),l=URL.createObjectURL(f),p=document.createElement("a");return p.href=l,p.download=`carous-lead-errors-${u}.json`,document.body.appendChild(p),p.click(),p.remove(),setTimeout(()=>URL.revokeObjectURL(l),5e3),s.length}})}function q(o){let s={ts:new Date().toISOString(),pageUrl:typeof window!="undefined"?window.location.href:"",userAgent:typeof navigator!="undefined"?navigator.userAgent:"",...o};try{console.error(`[carous:${o.widget}] lead submission failed`,s)}catch{}let u=$();u.push(s),X(u),V()}(function(){"use strict";var o={target:"",dealerName:"Dealer",leadEndpoint:"/leads",leadOwner:"",leadType:"contact-us",leadSource:"contact-page",phoneNumber:"",phoneTel:"",email:"",title:"Tell us what you need.",subtitle:"Send the team a message and they will come back to you by your preferred route.",minSubmitMs:350,rateLimitWindowMs:6e4,rateLimitMax:5},s=[["general","General enquiry"],["appointment","Book a visit"],["vehicle","Vehicle question"],["sell","Sell my car"]],u=[["phone","Phone"],["email","Email"]],f=null,l=null;function p(e){return e?{target:e.dataset.target||"",dealerName:e.dataset.dealerName||e.dataset.brandName||"",leadEndpoint:e.dataset.leadEndpoint||e.dataset.leadSubmitUrl||"",leadOwner:e.dataset.leadOwner||e.dataset.dealerClientId||"",leadType:e.dataset.leadType||"",leadSource:e.dataset.leadSource||"",phoneNumber:e.dataset.phoneNumber||e.dataset.phoneDisplay||"",phoneTel:e.dataset.phoneTel||"",email:e.dataset.email||"",title:e.dataset.title||"",subtitle:e.dataset.subtitle||"",minSubmitMs:e.dataset.minSubmitMs||"",rateLimitWindowMs:e.dataset.rateLimitWindowMs||"",rateLimitMax:e.dataset.rateLimitMax||""}:{}}function x(e){var t={};return Object.keys(o).forEach(function(r){t[r]=o[r]}),Object.keys(e||{}).forEach(function(r){e[r]!==void 0&&e[r]!==null&&e[r]!==""&&(t[r]=e[r])}),!t.phoneTel&&t.phoneNumber&&(t.phoneTel=t.phoneNumber.replace(/[^\d+]/g,"")),t.minSubmitMs=L(t.minSubmitMs,o.minSubmitMs),t.rateLimitWindowMs=L(t.rateLimitWindowMs,o.rateLimitWindowMs),t.rateLimitMax=L(t.rateLimitMax,o.rateLimitMax),t}function L(e,t){var r=parseInt(e,10);return Number.isFinite(r)&&r>=0?r:t}function _(e){return e?typeof e=="string"?document.querySelector(e):e&&e.nodeType===1?e:null:null}function F(e,t){return e.map(function(r){return'<option value="'+g(r[0])+'"'+(r[0]===t?" selected":"")+">"+d(r[1])+"</option>"}).join("")}function d(e){return String(e||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;")}function g(e){return d(e).replace(/`/g,"&#096;")}function C(){return`
       :host {
         --cfw-accent: var(--color-primary, var(--accent-primary, #d4af37));
         --cfw-accent-hover: var(--accent-secondary-hover, #b69424);
@@ -302,64 +302,64 @@
         .cfw-modal-header,
         .cfw-modal-content { padding: 18px; }
       }
-    `}function T(e,t,a){var r=Date.now(),i="cfw-"+Math.random().toString(36).slice(2);e.innerHTML=`
-      <style>${L()}</style>
-      <article class="cfw-widget${a?" is-compact":""}">
+    `}function A(e,t,r){var a=Date.now(),n="cfw-"+Math.random().toString(36).slice(2);e.innerHTML=`
+      <style>${C()}</style>
+      <article class="cfw-widget${r?" is-compact":""}">
         <div class="cfw-panel">
           <div>
             <span class="cfw-kicker">Contact Form</span>
-            <h2 class="cfw-title">${o(t.title)}</h2>
-            <p class="cfw-copy">${o(t.subtitle)}</p>
+            <h2 class="cfw-title">${d(t.title)}</h2>
+            <p class="cfw-copy">${d(t.subtitle)}</p>
           </div>
-          <div class="cfw-quick-list" aria-label="${m(t.dealerName)} contact options">
-            ${t.phoneNumber?'<a class="cfw-quick-item" href="tel:'+m(t.phoneTel)+'"><span><strong>'+o(t.phoneNumber)+"</strong><small>Showroom</small></span></a>":""}
-            ${t.email?'<a class="cfw-quick-item" href="mailto:'+m(t.email)+'"><span><strong>Email us</strong><small>'+o(t.email)+"</small></span></a>":""}
+          <div class="cfw-quick-list" aria-label="${g(t.dealerName)} contact options">
+            ${t.phoneNumber?'<a class="cfw-quick-item" href="tel:'+g(t.phoneTel)+'"><span><strong>'+d(t.phoneNumber)+"</strong><small>Showroom</small></span></a>":""}
+            ${t.email?'<a class="cfw-quick-item" href="mailto:'+g(t.email)+'"><span><strong>Email us</strong><small>'+d(t.email)+"</small></span></a>":""}
           </div>
         </div>
         <form class="cfw-form" novalidate>
           <input class="cfw-honeypot" type="text" name="website" tabindex="-1" autocomplete="new-password" aria-hidden="true" />
           <input class="cfw-honeypot" type="text" name="companyWebsite" tabindex="-1" autocomplete="off" aria-hidden="true" />
-          <div class="cfw-topline">Message ${o(t.dealerName)}</div>
+          <div class="cfw-topline">Message ${d(t.dealerName)}</div>
           <div class="cfw-grid">
-            ${y(i,"name","Full name","text","Your name","name")}
-            ${y(i,"phone","Phone number","tel","Your phone number","tel")}
-            ${y(i,"email","Email address","email","you@example.com","email")}
-            ${q(i,"topic","Enquiry type",$,"general")}
-            ${q(i,"preferredContact","Preferred contact",M,"phone")}
+            ${k(n,"name","Full name","text","Your name","name")}
+            ${k(n,"phone","Phone number","tel","Your phone number","tel")}
+            ${k(n,"email","Email address","email","you@example.com","email")}
+            ${j(n,"topic","Enquiry type",s,"general")}
+            ${j(n,"preferredContact","Preferred contact",u,"phone")}
           </div>
           <div class="cfw-field is-wide">
-            <label for="${i}-message">Message</label>
-            <textarea id="${i}-message" name="message" rows="2" placeholder="Tell us about the vehicle, appointment, or question you have in mind."></textarea>
+            <label for="${n}-message">Message</label>
+            <textarea id="${n}-message" name="message" rows="2" placeholder="Tell us about the vehicle, appointment, or question you have in mind."></textarea>
             <em class="cfw-error-text" data-error-for="message"></em>
           </div>
           <div class="cfw-footer">
             <button class="cfw-submit" type="submit"><span>Send message</span><span aria-hidden="true">\u2192</span></button>
-            <p class="cfw-note">By submitting, you agree that ${o(t.dealerName)} may contact you about your enquiry.</p>
+            <p class="cfw-note">By submitting, you agree that ${d(t.dealerName)} may contact you about your enquiry.</p>
           </div>
           <p class="cfw-status" hidden></p>
         </form>
       </article>
-    `;var n=e.querySelector("form"),s=e.querySelector("textarea");s&&(s.addEventListener("input",function(){b(s)}),b(s)),n.addEventListener("submit",function(p){p.preventDefault(),H(n,t,r)})}function y(e,t,a,r,i,n){return`
+    `;var c=e.querySelector("form"),m=e.querySelector("textarea");m&&(m.addEventListener("input",function(){v(m)}),v(m)),c.addEventListener("submit",function(h){h.preventDefault(),H(c,t,a)})}function k(e,t,r,a,n,c){return`
       <div class="cfw-field">
-        <label for="${e}-${t}">${o(a)}</label>
-        <input id="${e}-${t}" name="${t}" type="${r}" placeholder="${m(i)}" autocomplete="${m(n)}" />
+        <label for="${e}-${t}">${d(r)}</label>
+        <input id="${e}-${t}" name="${t}" type="${a}" placeholder="${g(n)}" autocomplete="${g(c)}" />
         <em class="cfw-error-text" data-error-for="${t}"></em>
       </div>
-    `}function q(e,t,a,r,i){return`
+    `}function j(e,t,r,a,n){return`
       <div class="cfw-field">
-        <label for="${e}-${t}">${o(a)}</label>
-        <select id="${e}-${t}" name="${t}">${W(r,i)}</select>
+        <label for="${e}-${t}">${d(r)}</label>
+        <select id="${e}-${t}" name="${t}">${F(a,n)}</select>
         <em class="cfw-error-text" data-error-for="${t}"></em>
       </div>
-    `}function b(e){e.style.height="auto",e.style.height=e.scrollHeight+"px"}function N(e,t){for(var a=0;a<e.length;a+=1)if(e[a][0]===t)return e[a][1];return t}function z(e){var t=new FormData(e);return{name:String(t.get("name")||"").trim(),email:String(t.get("email")||"").trim().toLowerCase(),phone:String(t.get("phone")||"").trim(),topic:String(t.get("topic")||"general"),preferredContact:String(t.get("preferredContact")||"phone"),message:String(t.get("message")||"").trim(),website:String(t.get("website")||""),companyWebsite:String(t.get("companyWebsite")||"")}}function A(e){return"carous-contact-form:"+(e.leadOwner||e.dealerName||"dealer")+":"+e.leadEndpoint}function D(e){if(!e.rateLimitWindowMs||!e.rateLimitMax)return!1;var t=A(e),a=Date.now();try{if(!window.localStorage)return!1;var r=window.localStorage.getItem(t),i=r?JSON.parse(r):{count:0,resetAt:a+e.rateLimitWindowMs};return!i.resetAt||a>i.resetAt?(window.localStorage.setItem(t,JSON.stringify({count:1,resetAt:a+e.rateLimitWindowMs})),!1):i.count>=e.rateLimitMax?!0:(window.localStorage.setItem(t,JSON.stringify({count:i.count+1,resetAt:i.resetAt})),!1)}catch{return!1}}function F(e,t,a){return e.website||e.companyWebsite||t.minSubmitMs>0&&Date.now()-a<t.minSubmitMs?!0:D(t)}function C(e,t){h(e,"success","Thank you. Your message has been sent to "+t.dealerName+"."),e.reset();var a=e.querySelector("textarea");a&&b(a)}function I(e,t){var a={};return t.name||(a.name="Please enter your full name."),t.phone||(a.phone="Please enter your phone number."),t.email?/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(t.email)||(a.email="Please enter a valid email."):a.email="Please enter your email address.",t.message?t.message.length<12&&(a.message="Please add a little more detail."):a.message="Please add a message.",e.querySelectorAll("[data-error-for]").forEach(function(r){r.textContent=a[r.getAttribute("data-error-for")]||""}),a}function h(e,t,a){var r=e.querySelector(".cfw-status");r&&(r.hidden=!a,r.textContent=a||"",r.className="cfw-status"+(t?" is-"+t:""))}function H(e,t,a){var r=z(e);if(r.website||r.companyWebsite){C(e,t);return}var i=I(e,r);if(!Object.keys(i).length){if(F(r,t,a)){C(e,t);return}var n=e.querySelector(".cfw-submit");n&&(n.disabled=!0,n.querySelector("span").textContent="Sending..."),h(e,"","");var s=N($,r.topic),p=N(M,r.preferredContact),k=window.location.href,E=["Topic: "+s,"Preferred Contact: "+p,"Page: "+k].join(`
-`),U={name:r.name,email:r.email,phone:r.phone,subject:t.dealerName+" contact enquiry: "+s,message:[r.message,"",E].join(`
-`),submittedDetails:E,topic:s,preferredContact:p,preferred_contact:p,permalink:k,url:k,leadType:t.leadType,leadSource:t.leadSource,leadOwner:t.leadOwner,formTs:a,website:r.website,companyWebsite:r.companyWebsite};fetch(t.leadEndpoint,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(U)}).then(function(c){return c.json().catch(function(){return{}}).then(function(w){if(!c.ok||w.success===!1||w.created===!1&&w.error)throw new Error(w.error||"Lead submission failed.");return w})}).then(function(){h(e,"success","Thank you. Your message has been sent to "+t.dealerName+"."),e.reset();var c=e.querySelector("textarea");c&&b(c)}).catch(function(c){h(e,"error",c&&c.message?c.message:"Something went wrong. Please try again.")}).finally(function(){n&&(n.disabled=!1,n.querySelector("span").textContent="Send message")})}}function S(e,t){var a=g(t||{}),r=P(e||a.target);if(!r)return null;r.innerHTML="";var i=r.shadowRoot||(r.attachShadow?r.attachShadow({mode:"open"}):r);return T(i,a,!1),f={element:r,root:i,options:a},f}function Y(e){var t=g(Object.assign({},d,f?f.options:{},e||{}));x();var a=document.createElement("div");document.body.appendChild(a);var r=a.attachShadow?a.attachShadow({mode:"open"}):a;r.innerHTML=`
-      <style>${L()}</style>
+    `}function v(e){e.style.height="auto",e.style.height=e.scrollHeight+"px"}function P(e,t){for(var r=0;r<e.length;r+=1)if(e[r][0]===t)return e[r][1];return t}function R(e){var t=new FormData(e);return{name:String(t.get("name")||"").trim(),email:String(t.get("email")||"").trim().toLowerCase(),phone:String(t.get("phone")||"").trim(),topic:String(t.get("topic")||"general"),preferredContact:String(t.get("preferredContact")||"phone"),message:String(t.get("message")||"").trim(),website:String(t.get("website")||""),companyWebsite:String(t.get("companyWebsite")||"")}}function U(e){return"carous-contact-form:"+(e.leadOwner||e.dealerName||"dealer")+":"+e.leadEndpoint}function J(e){if(!e.rateLimitWindowMs||!e.rateLimitMax)return!1;var t=U(e),r=Date.now();try{if(!window.localStorage)return!1;var a=window.localStorage.getItem(t),n=a?JSON.parse(a):{count:0,resetAt:r+e.rateLimitWindowMs};return!n.resetAt||r>n.resetAt?(window.localStorage.setItem(t,JSON.stringify({count:1,resetAt:r+e.rateLimitWindowMs})),!1):n.count>=e.rateLimitMax?!0:(window.localStorage.setItem(t,JSON.stringify({count:n.count+1,resetAt:n.resetAt})),!1)}catch{return!1}}function Y(e,t,r){return e.website||e.companyWebsite||t.minSubmitMs>0&&Date.now()-r<t.minSubmitMs?!0:J(t)}function W(e,t){y(e,"success","Thank you. Your message has been sent to "+t.dealerName+"."),e.reset();var r=e.querySelector("textarea");r&&v(r)}function B(e,t){var r={};return t.name||(r.name="Please enter your full name."),t.phone||(r.phone="Please enter your phone number."),t.email?/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(t.email)||(r.email="Please enter a valid email."):r.email="Please enter your email address.",t.message?t.message.length<12&&(r.message="Please add a little more detail."):r.message="Please add a message.",e.querySelectorAll("[data-error-for]").forEach(function(a){a.textContent=r[a.getAttribute("data-error-for")]||""}),r}function y(e,t,r){var a=e.querySelector(".cfw-status");a&&(a.hidden=!r,a.textContent=r||"",a.className="cfw-status"+(t?" is-"+t:""))}function H(e,t,r){var a=R(e);if(a.website||a.companyWebsite){W(e,t);return}var n=B(e,a);if(!Object.keys(n).length){if(Y(a,t,r)){W(e,t);return}var c=e.querySelector(".cfw-submit");c&&(c.disabled=!0,c.querySelector("span").textContent="Sending..."),y(e,"","");var m=P(s,a.topic),h=P(u,a.preferredContact),E=window.location.href,I=["Topic: "+m,"Preferred Contact: "+h,"Page: "+E].join(`
+`),M={name:a.name,email:a.email,phone:a.phone,subject:t.dealerName+" contact enquiry: "+m,message:[a.message,"",I].join(`
+`),submittedDetails:I,topic:m,preferredContact:h,preferred_contact:h,permalink:E,url:E,leadType:t.leadType,leadSource:t.leadSource,leadOwner:t.leadOwner,formTs:r,website:a.website,companyWebsite:a.companyWebsite};fetch(t.leadEndpoint,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(M)}).then(function(i){return i.json().catch(function(){return{}}).then(function(b){if(!i.ok||b.success===!1||b.created===!1&&b.error){var O=new Error(b.error||"Lead submission failed.");throw q({widget:"contact-form",endpoint:t.leadEndpoint,phase:"http-error",status:i.status,statusText:i.statusText,responseBody:b,errorMessage:O.message,payload:M,leadOwner:t.leadOwner,leadType:t.leadType}),O.__carousLogged=!0,O}return b})}).then(function(){y(e,"success","Thank you. Your message has been sent to "+t.dealerName+"."),e.reset();var i=e.querySelector("textarea");i&&v(i)}).catch(function(i){(!i||!i.__carousLogged)&&q({widget:"contact-form",endpoint:t.leadEndpoint,phase:"network-error",errorMessage:i&&i.message?i.message:String(i),payload:M,leadOwner:t.leadOwner,leadType:t.leadType}),y(e,"error",i&&i.message?i.message:"Something went wrong. Please try again.")}).finally(function(){c&&(c.disabled=!1,c.querySelector("span").textContent="Send message")})}}function T(e,t){var r=x(t||{}),a=_(e||r.target);if(!a)return null;a.innerHTML="";var n=a.shadowRoot||(a.attachShadow?a.attachShadow({mode:"open"}):a);return A(n,r,!1),f={element:a,root:n,options:r},f}function K(e){var t=x(Object.assign({},w,f?f.options:{},e||{}));S();var r=document.createElement("div");document.body.appendChild(r);var a=r.attachShadow?r.attachShadow({mode:"open"}):r;a.innerHTML=`
+      <style>${C()}</style>
       <div class="cfw-modal-overlay">
         <div class="cfw-modal" role="dialog" aria-modal="true" aria-labelledby="cfw-modal-title">
           <div class="cfw-modal-header">
             <div>
-              <span class="cfw-modal-eyebrow">Contact ${o(t.dealerName)}</span>
+              <span class="cfw-modal-eyebrow">Contact ${d(t.dealerName)}</span>
               <h2 class="cfw-modal-title" id="cfw-modal-title">Send a message</h2>
               <p class="cfw-modal-description">Vehicle questions, appointments, and showroom enquiries all land with the same team.</p>
             </div>
@@ -368,4 +368,4 @@
           <div class="cfw-modal-content"></div>
         </div>
       </div>
-    `;var i=r.querySelector(".cfw-modal-content");return T(i,t,!0),r.querySelector(".cfw-modal-close").addEventListener("click",x),r.querySelector(".cfw-modal-overlay").addEventListener("click",function(n){n.target.classList.contains("cfw-modal-overlay")&&x()}),l={host:a,root:r},l}function x(){l&&l.host&&l.host.parentNode&&l.host.parentNode.removeChild(l.host),l=null}var J=document.currentScript,d=g(j(J));window.CarousContactForm=Object.assign({},window.CarousContactForm||{},{mount:S,open:Y,close:x,configure:function(e){d=g(Object.assign({},d,e||{})),f&&S(f.element,d)}});function O(){d.target&&S(d.target,d)}document.readyState==="loading"?document.addEventListener("DOMContentLoaded",O,{once:!0}):O()})();})();
+    `;var n=a.querySelector(".cfw-modal-content");return A(n,t,!0),a.querySelector(".cfw-modal-close").addEventListener("click",S),a.querySelector(".cfw-modal-overlay").addEventListener("click",function(c){c.target.classList.contains("cfw-modal-overlay")&&S()}),l={host:r,root:a},l}function S(){l&&l.host&&l.host.parentNode&&l.host.parentNode.removeChild(l.host),l=null}var G=document.currentScript,w=x(p(G));window.CarousContactForm=Object.assign({},window.CarousContactForm||{},{mount:T,open:K,close:S,configure:function(e){w=x(Object.assign({},w,e||{})),f&&T(f.element,w)}});function D(){w.target&&T(w.target,w)}document.readyState==="loading"?document.addEventListener("DOMContentLoaded",D,{once:!0}):D()})();})();

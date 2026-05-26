@@ -93,9 +93,26 @@ Clear when leaving a vehicle page:
 
 The widget also dispatches a `visitorchat:settings` CustomEvent on `window` every time `VC_SETTINGS` changes.
 
-## Lead Pipeline (Server-Side Webhook)
+## Lead Pipeline — central Carous webhook
 
-Visitor Chat is an operator-driven service — leads are captured by their operators and delivered via webhook. To land those leads in the standard Carous `/api/leads` pipeline, mount the bundled webhook receiver in any Next.js dealer app:
+For the Carous dealer fleet, **Visitor Chat posts every dealer's captured leads to one shared endpoint**:
+
+```text
+POST https://api.carous.co.uk/v1/webhooks/visitor-chat
+Header: Verification-Token: <Carous-wide token>
+```
+
+Per-dealer routing happens automatically: this embed wrapper sets `VC_SETTINGS.data.leadOwner = <dealerClientId>` on every page load, VC echoes that back in `page_data` on every webhook, and the central receiver passes it through to `Leads::create_lead` as the lead owner.
+
+VC's account manager needs:
+1. The webhook URL above
+2. The shared `Verification-Token` value (provisioned out of band; stored on api.carous.co.uk as `VISITOR_CHAT_VERIFICATION_TOKEN`)
+
+Once they configure that on each dealer's VC account, every chat lead lands in the same `/leads` table as every other Carous lead, with the dealer correctly attributed.
+
+### Optional — per-app fallback receiver
+
+For one-off dealer sites that need to terminate the webhook on their own origin (legacy integration, regional routing, etc.), the package also ships a portable Next.js handler factory:
 
 ```ts
 // app/api/visitor-chat/webhook/route.ts
@@ -107,11 +124,11 @@ export const POST = createVisitorChatWebhookHandler({
   leadOwner: process.env.DEALER_CLIENT_ID!,
   dealerName: "Dealer Name",
   leadEndpoint: "/api/leads",
-  secret: process.env.VISITOR_CHAT_WEBHOOK_SECRET,
+  secret: process.env.VISITOR_CHAT_VERIFICATION_TOKEN,
 });
 ```
 
-Then share `https://www.<dealer>.co.uk/api/visitor-chat/webhook?secret=<token>` with the Visitor Chat account manager.
+The handler accepts VC's `Verification-Token` header (with `X-Visitor-Chat-Secret` and `?secret=` query param as legacy fallbacks). Use the central webhook by default — only mount this when the dealer specifically can't route to the shared endpoint.
 
 Normalised lead fields: `name, email, phone, subject, message, leadType, leadSource, leadOwner, permalink, url, vehicleTitle, advertId, registration, transcript, pageData, raw`.
 

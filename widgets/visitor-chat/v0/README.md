@@ -27,9 +27,11 @@ http://widgets.carous.test/widgets/visitor-chat/v0/visitor-chat.js
 
 The default loader `https://cdn.visitor.chat/vc-loader.min.js` is injected automatically on first load. The widget keeps `window.VC_SETTINGS` in sync as the page navigates.
 
+The widget ships with the central Carous VC tenant baked in (`id: 307951`, `accountId: 644981`), so dealers that route through the shared Carous account don't need to set `data-vc-id` / `data-vc-account-id` at all — `data-dealer-client-id` is enough for per-dealer lead attribution.
+
 ## Full Configuration (VC §3b multi-account)
 
-If the Visitor Chat account manager has issued a dealer `id` + `accountId`, pass them in:
+If the Visitor Chat account manager has issued a dealer `id` + `accountId` (overrides the central Carous tenant), pass them in:
 
 ```html
 <script

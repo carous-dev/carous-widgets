@@ -3,3 +3,4 @@ carous-widgets
 carous-widgets.pub
 *.tmp
 *.log
+*-test.html

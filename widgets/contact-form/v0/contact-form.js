@@ -14,6 +14,13 @@
         font-family: inherit;
       }
       * { box-sizing: border-box; }
+      /* The widget lays itself out from ITS OWN width, not the viewport, so it
+         stacks cleanly when dropped into a narrow page column instead of
+         overflowing (see the @container rules below). */
+      .cfw-shell {
+        container-type: inline-size;
+        width: 100%;
+      }
       .cfw-widget {
         display: grid;
         grid-template-columns: 1fr;
@@ -274,16 +281,23 @@
         line-height: 1;
       }
       .cfw-modal-content { padding: 24px; }
-      @media (min-width: 720px) {
+      /* Two-up form fields as soon as the widget's own box has room \u2014 decoupled
+         from the panel/form split so a stacked-but-wide form still gets them. */
+      @container (min-width: 480px) {
+        .cfw-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .cfw-field.is-wide { grid-column: 1 / -1; }
+        .cfw-submit { min-width: 190px; }
+      }
+      /* Side-by-side panel + form only when the widget's container is wide
+         enough. Container query (not a viewport media query) so a narrow page
+         column makes it stack rather than cramp/clip. */
+      @container (min-width: 720px) {
         .cfw-widget {
           grid-template-columns: minmax(260px, 0.78fr) minmax(0, 1.22fr);
           border-radius: 20px;
         }
         .cfw-panel,
         .cfw-form { padding: 30px; }
-        .cfw-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-        .cfw-field.is-wide { grid-column: 1 / -1; }
-        .cfw-submit { min-width: 190px; }
         .cfw-widget.is-compact { display: block; }
       }
       @media (max-width: 520px) {
@@ -304,6 +318,7 @@
       }
     `}function A(e,t,r){var a=Date.now(),n="cfw-"+Math.random().toString(36).slice(2);e.innerHTML=`
       <style>${C()}</style>
+      <div class="cfw-shell">
       <article class="cfw-widget${r?" is-compact":""}">
         <div class="cfw-panel">
           <div>
@@ -339,7 +354,8 @@
           <p class="cfw-status" hidden></p>
         </form>
       </article>
-    `;var c=e.querySelector("form"),m=e.querySelector("textarea");m&&(m.addEventListener("input",function(){v(m)}),v(m)),c.addEventListener("submit",function(h){h.preventDefault(),H(c,t,a)})}function k(e,t,r,a,n,c){return`
+      </div>
+    `;var c=e.querySelector("form"),m=e.querySelector("textarea");m&&(m.addEventListener("input",function(){v(m)}),v(m)),c.addEventListener("submit",function(b){b.preventDefault(),H(c,t,a)})}function k(e,t,r,a,n,c){return`
       <div class="cfw-field">
         <label for="${e}-${t}">${d(r)}</label>
         <input id="${e}-${t}" name="${t}" type="${a}" placeholder="${g(n)}" autocomplete="${g(c)}" />
@@ -351,9 +367,9 @@
         <select id="${e}-${t}" name="${t}">${F(a,n)}</select>
         <em class="cfw-error-text" data-error-for="${t}"></em>
       </div>
-    `}function v(e){e.style.height="auto",e.style.height=e.scrollHeight+"px"}function P(e,t){for(var r=0;r<e.length;r+=1)if(e[r][0]===t)return e[r][1];return t}function R(e){var t=new FormData(e);return{name:String(t.get("name")||"").trim(),email:String(t.get("email")||"").trim().toLowerCase(),phone:String(t.get("phone")||"").trim(),topic:String(t.get("topic")||"general"),preferredContact:String(t.get("preferredContact")||"phone"),message:String(t.get("message")||"").trim(),website:String(t.get("website")||""),companyWebsite:String(t.get("companyWebsite")||"")}}function U(e){return"carous-contact-form:"+(e.leadOwner||e.dealerName||"dealer")+":"+e.leadEndpoint}function J(e){if(!e.rateLimitWindowMs||!e.rateLimitMax)return!1;var t=U(e),r=Date.now();try{if(!window.localStorage)return!1;var a=window.localStorage.getItem(t),n=a?JSON.parse(a):{count:0,resetAt:r+e.rateLimitWindowMs};return!n.resetAt||r>n.resetAt?(window.localStorage.setItem(t,JSON.stringify({count:1,resetAt:r+e.rateLimitWindowMs})),!1):n.count>=e.rateLimitMax?!0:(window.localStorage.setItem(t,JSON.stringify({count:n.count+1,resetAt:n.resetAt})),!1)}catch{return!1}}function Y(e,t,r){return e.website||e.companyWebsite||t.minSubmitMs>0&&Date.now()-r<t.minSubmitMs?!0:J(t)}function W(e,t){y(e,"success","Thank you. Your message has been sent to "+t.dealerName+"."),e.reset();var r=e.querySelector("textarea");r&&v(r)}function B(e,t){var r={};return t.name||(r.name="Please enter your full name."),t.phone||(r.phone="Please enter your phone number."),t.email?/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(t.email)||(r.email="Please enter a valid email."):r.email="Please enter your email address.",t.message?t.message.length<12&&(r.message="Please add a little more detail."):r.message="Please add a message.",e.querySelectorAll("[data-error-for]").forEach(function(a){a.textContent=r[a.getAttribute("data-error-for")]||""}),r}function y(e,t,r){var a=e.querySelector(".cfw-status");a&&(a.hidden=!r,a.textContent=r||"",a.className="cfw-status"+(t?" is-"+t:""))}function H(e,t,r){var a=R(e);if(a.website||a.companyWebsite){W(e,t);return}var n=B(e,a);if(!Object.keys(n).length){if(Y(a,t,r)){W(e,t);return}var c=e.querySelector(".cfw-submit");c&&(c.disabled=!0,c.querySelector("span").textContent="Sending..."),y(e,"","");var m=P(s,a.topic),h=P(u,a.preferredContact),E=window.location.href,I=["Topic: "+m,"Preferred Contact: "+h,"Page: "+E].join(`
-`),M={name:a.name,email:a.email,phone:a.phone,subject:t.dealerName+" contact enquiry: "+m,message:[a.message,"",I].join(`
-`),submittedDetails:I,topic:m,preferredContact:h,preferred_contact:h,permalink:E,url:E,leadType:t.leadType,leadSource:t.leadSource,leadOwner:t.leadOwner,formTs:r,website:a.website,companyWebsite:a.companyWebsite};fetch(t.leadEndpoint,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(M)}).then(function(i){return i.json().catch(function(){return{}}).then(function(b){if(!i.ok||b.success===!1||b.created===!1&&b.error){var O=new Error(b.error||"Lead submission failed.");throw q({widget:"contact-form",endpoint:t.leadEndpoint,phase:"http-error",status:i.status,statusText:i.statusText,responseBody:b,errorMessage:O.message,payload:M,leadOwner:t.leadOwner,leadType:t.leadType}),O.__carousLogged=!0,O}return b})}).then(function(){y(e,"success","Thank you. Your message has been sent to "+t.dealerName+"."),e.reset();var i=e.querySelector("textarea");i&&v(i)}).catch(function(i){(!i||!i.__carousLogged)&&q({widget:"contact-form",endpoint:t.leadEndpoint,phase:"network-error",errorMessage:i&&i.message?i.message:String(i),payload:M,leadOwner:t.leadOwner,leadType:t.leadType}),y(e,"error",i&&i.message?i.message:"Something went wrong. Please try again.")}).finally(function(){c&&(c.disabled=!1,c.querySelector("span").textContent="Send message")})}}function T(e,t){var r=x(t||{}),a=_(e||r.target);if(!a)return null;a.innerHTML="";var n=a.shadowRoot||(a.attachShadow?a.attachShadow({mode:"open"}):a);return A(n,r,!1),f={element:a,root:n,options:r},f}function K(e){var t=x(Object.assign({},w,f?f.options:{},e||{}));S();var r=document.createElement("div");document.body.appendChild(r);var a=r.attachShadow?r.attachShadow({mode:"open"}):r;a.innerHTML=`
+    `}function v(e){e.style.height="auto",e.style.height=e.scrollHeight+"px"}function W(e,t){for(var r=0;r<e.length;r+=1)if(e[r][0]===t)return e[r][1];return t}function R(e){var t=new FormData(e);return{name:String(t.get("name")||"").trim(),email:String(t.get("email")||"").trim().toLowerCase(),phone:String(t.get("phone")||"").trim(),topic:String(t.get("topic")||"general"),preferredContact:String(t.get("preferredContact")||"phone"),message:String(t.get("message")||"").trim(),website:String(t.get("website")||""),companyWebsite:String(t.get("companyWebsite")||"")}}function U(e){return"carous-contact-form:"+(e.leadOwner||e.dealerName||"dealer")+":"+e.leadEndpoint}function J(e){if(!e.rateLimitWindowMs||!e.rateLimitMax)return!1;var t=U(e),r=Date.now();try{if(!window.localStorage)return!1;var a=window.localStorage.getItem(t),n=a?JSON.parse(a):{count:0,resetAt:r+e.rateLimitWindowMs};return!n.resetAt||r>n.resetAt?(window.localStorage.setItem(t,JSON.stringify({count:1,resetAt:r+e.rateLimitWindowMs})),!1):n.count>=e.rateLimitMax?!0:(window.localStorage.setItem(t,JSON.stringify({count:n.count+1,resetAt:n.resetAt})),!1)}catch{return!1}}function Y(e,t,r){return e.website||e.companyWebsite||t.minSubmitMs>0&&Date.now()-r<t.minSubmitMs?!0:J(t)}function P(e,t){y(e,"success","Thank you. Your message has been sent to "+t.dealerName+"."),e.reset();var r=e.querySelector("textarea");r&&v(r)}function B(e,t){var r={};return t.name||(r.name="Please enter your full name."),t.phone||(r.phone="Please enter your phone number."),t.email?/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(t.email)||(r.email="Please enter a valid email."):r.email="Please enter your email address.",t.message?t.message.length<12&&(r.message="Please add a little more detail."):r.message="Please add a message.",e.querySelectorAll("[data-error-for]").forEach(function(a){a.textContent=r[a.getAttribute("data-error-for")]||""}),r}function y(e,t,r){var a=e.querySelector(".cfw-status");a&&(a.hidden=!r,a.textContent=r||"",a.className="cfw-status"+(t?" is-"+t:""))}function H(e,t,r){var a=R(e);if(a.website||a.companyWebsite){P(e,t);return}var n=B(e,a);if(!Object.keys(n).length){if(Y(a,t,r)){P(e,t);return}var c=e.querySelector(".cfw-submit");c&&(c.disabled=!0,c.querySelector("span").textContent="Sending..."),y(e,"","");var m=W(s,a.topic),b=W(u,a.preferredContact),E=window.location.href,D=["Topic: "+m,"Preferred Contact: "+b,"Page: "+E].join(`
+`),O={name:a.name,email:a.email,phone:a.phone,subject:t.dealerName+" contact enquiry: "+m,message:[a.message,"",D].join(`
+`),submittedDetails:D,topic:m,preferredContact:b,preferred_contact:b,permalink:E,url:E,leadType:t.leadType,leadSource:t.leadSource,leadOwner:t.leadOwner,formTs:r,website:a.website,companyWebsite:a.companyWebsite};fetch(t.leadEndpoint,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(O)}).then(function(i){return i.json().catch(function(){return{}}).then(function(h){if(!i.ok||h.success===!1||h.created===!1&&h.error){var M=new Error(h.error||"Lead submission failed.");throw q({widget:"contact-form",endpoint:t.leadEndpoint,phase:"http-error",status:i.status,statusText:i.statusText,responseBody:h,errorMessage:M.message,payload:O,leadOwner:t.leadOwner,leadType:t.leadType}),M.__carousLogged=!0,M}return h})}).then(function(){y(e,"success","Thank you. Your message has been sent to "+t.dealerName+"."),e.reset();var i=e.querySelector("textarea");i&&v(i)}).catch(function(i){(!i||!i.__carousLogged)&&q({widget:"contact-form",endpoint:t.leadEndpoint,phase:"network-error",errorMessage:i&&i.message?i.message:String(i),payload:O,leadOwner:t.leadOwner,leadType:t.leadType}),y(e,"error",i&&i.message?i.message:"Something went wrong. Please try again.")}).finally(function(){c&&(c.disabled=!1,c.querySelector("span").textContent="Send message")})}}function T(e,t){var r=x(t||{}),a=_(e||r.target);if(!a)return null;a.innerHTML="";var n=a.shadowRoot||(a.attachShadow?a.attachShadow({mode:"open"}):a);return A(n,r,!1),f={element:a,root:n,options:r},f}function K(e){var t=x(Object.assign({},w,f?f.options:{},e||{}));S();var r=document.createElement("div");document.body.appendChild(r);var a=r.attachShadow?r.attachShadow({mode:"open"}):r;a.innerHTML=`
       <style>${C()}</style>
       <div class="cfw-modal-overlay">
         <div class="cfw-modal" role="dialog" aria-modal="true" aria-labelledby="cfw-modal-title">
@@ -368,4 +384,4 @@
           <div class="cfw-modal-content"></div>
         </div>
       </div>
-    `;var n=a.querySelector(".cfw-modal-content");return A(n,t,!0),a.querySelector(".cfw-modal-close").addEventListener("click",S),a.querySelector(".cfw-modal-overlay").addEventListener("click",function(c){c.target.classList.contains("cfw-modal-overlay")&&S()}),l={host:r,root:a},l}function S(){l&&l.host&&l.host.parentNode&&l.host.parentNode.removeChild(l.host),l=null}var G=document.currentScript,w=x(p(G));window.CarousContactForm=Object.assign({},window.CarousContactForm||{},{mount:T,open:K,close:S,configure:function(e){w=x(Object.assign({},w,e||{})),f&&T(f.element,w)}});function D(){w.target&&T(w.target,w)}document.readyState==="loading"?document.addEventListener("DOMContentLoaded",D,{once:!0}):D()})();})();
+    `;var n=a.querySelector(".cfw-modal-content");return A(n,t,!0),a.querySelector(".cfw-modal-close").addEventListener("click",S),a.querySelector(".cfw-modal-overlay").addEventListener("click",function(c){c.target.classList.contains("cfw-modal-overlay")&&S()}),l={host:r,root:a},l}function S(){l&&l.host&&l.host.parentNode&&l.host.parentNode.removeChild(l.host),l=null}var G=document.currentScript,w=x(p(G));window.CarousContactForm=Object.assign({},window.CarousContactForm||{},{mount:T,open:K,close:S,configure:function(e){w=x(Object.assign({},w,e||{})),f&&T(f.element,w)}});function I(){w.target&&T(w.target,w)}document.readyState==="loading"?document.addEventListener("DOMContentLoaded",I,{once:!0}):I()})();})();

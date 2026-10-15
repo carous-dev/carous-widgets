@@ -40,6 +40,18 @@ http://widgets.carous.test/widgets/whatsapp-enquiry/v0/whatsapp-enquiry.js
 - `data-placement`: `bottom-right` or `bottom-left`.
 - `data-accent-color`, `data-surface-color`, `data-text-color`, `data-border-color`: Optional theme overrides.
 
+## Corner Rounding
+
+The widget mounts into the host page DOM and reads the `--wa-radius-scale` CSS custom property (default `1` = rounded). Every "box" corner — panel, cards, chat bubbles, inputs, buttons, and the floating launcher — is `base × --wa-radius-scale`, so a flat-design host can square the whole widget with one line:
+
+```css
+:root {
+  --wa-radius-scale: 0; /* sharp corners to match a flat app */
+}
+```
+
+Avatars, status dots, and the notification badge stay perfectly circular regardless of the scale.
+
 ## Page-Specific Vehicle Context
 
 Vehicle detail pages can update the mounted widget without importing React package code:
